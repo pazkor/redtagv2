@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>RED TAG Form</title>
-  <!-- load the libs forr pdf and canvas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -97,7 +96,7 @@
 <body>
   <div id="exportWrapper">
     <header>
-      <img src="lgo.png">
+      <img src="logo.png">
       <h1>RED TAG Form</h1>
     </header>
     <form id="formContainer">
@@ -113,7 +112,7 @@
           <option value="MA-0874-04">
         </datalist>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="motorPositionGroup" style="display: none;">
         <label for="motorPosition">Motor Position</label>
         <select id="motorPosition" name="motorPosition">
           <option value="">-- Select Motor Position --</option>
@@ -176,7 +175,6 @@
     <button type="button" id="savePdfBtn">📄 Save as PDF</button>
   </div>
   <script>
-    // map pn to replace reasons
     const pnToReasons = {
       'SP-MA-0969-02': ["Brake motor rotates freely", "Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
       'SP-MA-0970-02': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Other"],
@@ -186,7 +184,15 @@
       'MA-0874-04': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"]
     };
 
-    // define group rules for motors
+    const partNumberToGroup = {
+      'SP-MA-0969-02': 'Group1',
+      'SP-MA-0874-03': 'Group1',
+      'MA-0874-04': 'Group1',
+      'SP-MA-0970-02': 'Group2',
+      'SP-MA-0873-03': 'Group2',
+      'MA-0873-04': 'Group2'
+    };
+
     const motorPositionRules = {
       'M1': 'Group1',
       'M2': 'Group2',
@@ -198,21 +204,12 @@
       'M8': 'Group2'
     };
 
-    // each pn has a group. use this to validate motor+pn match
-    const partNumberToGroup = {
-      'SP-MA-0969-02': 'Group1',
-      'SP-MA-0874-03': 'Group1',
-      'MA-0874-04': 'Group1',
-      'SP-MA-0970-02': 'Group2',
-      'SP-MA-0873-03': 'Group2',
-      'MA-0873-04': 'Group2'
-    };
-
-    // when pn changes, update the reasons
     document.getElementById('partNumber').addEventListener('input', function () {
       const pn = this.value.trim();
       const reasons = pnToReasons[pn];
       const reasonSelect = document.getElementById('reason');
+      const motorGroup = document.getElementById('motorPositionGroup');
+
       reasonSelect.innerHTML = '<option value="">-- Select Reason --</option>';
       if (reasons) {
         for (let i = 0; i < reasons.length; i++) {
@@ -222,9 +219,15 @@
           reasonSelect.appendChild(option);
         }
       }
+
+      if (partNumberToGroup[pn]) {
+        motorGroup.style.display = 'block';
+      } else {
+        motorGroup.style.display = 'none';
+        document.getElementById('motorPosition').value = '';
+      }
     });
 
-    // check if motor pos valid for pn group
     document.getElementById('motorPosition').addEventListener('change', function () {
       const pn = document.getElementById('partNumber').value.trim();
       const pnGroup = partNumberToGroup[pn];
@@ -236,12 +239,10 @@
       }
     });
 
-    // run on load
     document.addEventListener('DOMContentLoaded', function () {
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('removalDate').value = today;
 
-      // img preview logic
       const fileInput = document.getElementById('fileInput');
       const cameraInput = document.getElementById('cameraInput');
       const previewContainer = document.getElementById('previewContainer');
@@ -261,7 +262,6 @@
       fileInput.addEventListener('change', function () { previewImage(fileInput); });
       cameraInput.addEventListener('change', function () { previewImage(cameraInput); });
 
-      // generate pdf on click
       document.getElementById('savePdfBtn').addEventListener('click', function () {
         const wrapper = document.getElementById('exportWrapper');
         html2canvas(wrapper, {
