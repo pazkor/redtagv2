@@ -181,7 +181,6 @@
       const pn = this.value.trim();
       const reasons = pnToReasons[pn];
       const reasonSelect = document.getElementById('reason');
-
       reasonSelect.innerHTML = '<option value="">-- Select Reason --</option>';
       if (Array.isArray(reasons)) {
         reasons.forEach(reason => {
@@ -206,22 +205,20 @@
         comments: document.getElementById('comments')?.value || ''
       };
 
-      fetch('https://script.google.com/macros/s/AKfycbyScfATdPmtUmhY4Ee3d5J-XAxYtYtltm2K-d4Rdq4L394TsVbzPPWFOsnP65AUD8D5Tw/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.text();
-      })
-      .then(result => {
-        alert("✅ Data submitted to Google Sheet: " + result);
-      })
-      .catch(error => {
-        console.error("❌ Error submitting data:", error);
-        alert("❌ Error submitting data. Check console.");
-      });
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://script.google.com/macros/s/AKfycbyScfATdPmtUmhY4Ee3d5J-XAxYtYtltm2K-d4Rdq4L394TsVbzPPWFOsnP65AUD8D5Tw/exec';
+      form.target = '_blank';
+      for (const key in data) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = data[key];
+        form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
     }
   </script>
 </body>
