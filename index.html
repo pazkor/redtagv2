@@ -2,55 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RED TAG Form</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-      font-family: Arial, sans-serif;
-      font-weight: 600;
-    }
     body {
+      font-family: Arial, sans-serif;
       padding: 20px;
       max-width: 800px;
       margin: auto;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 30px;
-    }
-    header img {
-      height: 50px;
+      background: #f9f9f9;
     }
     h1 {
-      margin: 0 auto;
+      text-align: center;
     }
     .form-group {
       margin-bottom: 20px;
     }
     label {
-      display: block;
       font-weight: bold;
+      display: block;
       margin-bottom: 5px;
     }
     input, select, textarea {
       width: 100%;
       padding: 10px;
-      font-size: 1.1em;
-      border: 1px solid #ccc;
       border-radius: 5px;
-      font-weight: 600;
+      border: 1px solid #ccc;
       box-sizing: border-box;
-    }
-    textarea {
-      resize: vertical;
-      min-height: 80px;
+      font-size: 1em;
     }
     button {
       padding: 10px 20px;
@@ -65,135 +44,110 @@
     button:hover {
       background-color: #0056b3;
     }
-    #previewContainer {
-      margin-top: 30px;
-      text-align: center;
-    }
-    #previewContainer img {
-      width: 100%;
-      max-width: 500px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    @media print {
-      button {
-        display: none;
-      }
-      @page {
-        size: A4 portrait;
-        margin: 10mm;
-      }
-      body {
-        zoom: 0.65;
-        font-weight: 700;
-      }
-      input, select, textarea {
-        font-size: 1.2em;
-      }
-    }
   </style>
 </head>
 <body>
-  <div id="exportWrapper">
-    <header>
-      <img src="lgo.png">
-      <h1>RED TAG Form</h1>
-    </header>
-    <form id="formContainer" action="https://script.google.com/macros/s/AKfycbwxtKF0hxjzG9bo9uoAngsTCxlSsBLrmJMP3x9-UsqsrnRBNOwslgOWFrTMjAhkBRYx/exec" method="POST" target="_blank">
-      <div class="form-group">
-        <label for="partNumber">Part Number</label>
-        <input type="text" id="partNumber" name="partNumber" list="partNumbers">
-        <datalist id="partNumbers">
-          <option value="SP-MA-0969-02">
-          <option value="SP-MA-0970-02">
-          <option value="SP-MA-0874-03">
-          <option value="SP-MA-0873-03">
-          <option value="MA-0873-04">
-          <option value="MA-0874-04">
-        </datalist>
-      </div>
-      <div class="form-group" id="motorPositionGroup" style="display: none;">
-        <label for="motorPosition">Motor Position</label>
-        <select id="motorPosition" name="motorPosition">
-          <option value="">-- Select Motor Position --</option>
-          <option value="M1">M1</option>
-          <option value="M2">M2</option>
-          <option value="M3">M3</option>
-          <option value="M4">M4</option>
-          <option value="M5">M5</option>
-          <option value="M6">M6</option>
-          <option value="M7">M7</option>
-          <option value="M8">M8</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="reason">Reason of Replace</label>
-        <select id="reason" name="reason">
-          <option value="">-- Select Reason --</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="removalDate">Removal Date</label>
-        <input type="date" id="removalDate" name="removalDate">
-      </div>
-      <div class="form-group">
-        <label for="removedFrom">Removed From (Asset SN)</label>
-        <input type="text" id="removedFrom" name="removedFrom">
-      </div>
-      <div class="form-group">
-        <label for="taggedBy">Tagged By</label>
-        <input type="text" id="taggedBy" name="taggedBy">
-      </div>
-      <div class="form-group">
-        <label for="mfc">MFC</label>
-        <select id="mfc" name="mfc">
-          <option value="mfc1">MFC1</option>
-          <option value="Emk">Emk</option>
-          <option value="bs">BS</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="serviceCallId">Service Call ID</label>
-        <input type="text" id="serviceCallId" name="serviceCallId">
-      </div>
-      <div class="form-group">
-        <label for="comments">Comments</label>
-        <textarea id="comments" name="comments"></textarea>
-      </div>
-      <div style="margin-top: 30px; text-align: center;">
-        <button type="button" onclick="window.print()">🖨️ Print</button>
-        <button type="submit">📤 Submit to Google Sheet</button>
-      </div>
-    </form>
-  </div>
+  <h1>RED TAG Form</h1>
+  <form action="https://script.google.com/macros/s/PASTE-YOUR-SCRIPT-ID/exec" method="POST" target="_blank">
+    <div class="form-group">
+      <label for="partNumber">Part Number</label>
+      <input type="text" name="partNumber" id="partNumber" list="partNumbers" required>
+      <datalist id="partNumbers">
+        <option value="SP-MA-0969-02">
+        <option value="SP-MA-0970-02">
+        <option value="SP-MA-0874-03">
+        <option value="SP-MA-0873-03">
+        <option value="MA-0873-04">
+        <option value="MA-0874-04">
+      </datalist>
+    </div>
+
+    <div class="form-group">
+      <label for="motorPosition">Motor Position</label>
+      <select name="motorPosition" id="motorPosition">
+        <option value="">-- Select Motor Position --</option>
+        <option value="M1">M1</option>
+        <option value="M2">M2</option>
+        <option value="M3">M3</option>
+        <option value="M4">M4</option>
+        <option value="M5">M5</option>
+        <option value="M6">M6</option>
+        <option value="M7">M7</option>
+        <option value="M8">M8</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="reason">Reason for Replacement</label>
+      <select name="reason" id="reason">
+        <option value="">-- Select Reason --</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="removalDate">Removal Date</label>
+      <input type="date" name="removalDate" id="removalDate" required>
+    </div>
+
+    <div class="form-group">
+      <label for="removedFrom">Removed From (Asset SN)</label>
+      <input type="text" name="removedFrom" id="removedFrom" required>
+    </div>
+
+    <div class="form-group">
+      <label for="taggedBy">Tagged By</label>
+      <input type="text" name="taggedBy" id="taggedBy" required>
+    </div>
+
+    <div class="form-group">
+      <label for="mfc">MFC</label>
+      <select name="mfc" id="mfc">
+        <option value="mfc1">MFC1</option>
+        <option value="Emk">Emk</option>
+        <option value="bs">BS</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="serviceCallId">Service Call ID</label>
+      <input type="text" name="serviceCallId" id="serviceCallId">
+    </div>
+
+    <div class="form-group">
+      <label for="comments">Comments</label>
+      <textarea name="comments" id="comments"></textarea>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
   <script>
     const pnToReasons = {
-      'SP-MA-0969-02': ["Brake motor rotates freely", "Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
-      'SP-MA-0970-02': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Other"],
-      'SP-MA-0874-03': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
-      'SP-MA-0873-03': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
-      'MA-0873-04': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
-      'MA-0874-04': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"]
+      "SP-MA-0969-02": ["Brake motor rotates freely", "Ticking noises", "Motor test Failures", "Cable damage", "Other"],
+      "SP-MA-0970-02": ["Ticking noises", "Motor test Failures", "Other"],
+      "SP-MA-0874-03": ["Ticking noises", "Motor test Failures", "Cable damage", "Other"],
+      "SP-MA-0873-03": ["Ticking noises", "Motor test Failures", "Cable damage", "Other"],
+      "MA-0873-04": ["Ticking noises", "Motor test Failures", "Cable damage", "Other"],
+      "MA-0874-04": ["Ticking noises", "Motor test Failures", "Cable damage", "Other"]
     };
 
     document.getElementById('partNumber').addEventListener('input', function () {
-      const pn = this.value.trim();
-      const reasons = pnToReasons[pn];
+      const value = this.value;
       const reasonSelect = document.getElementById('reason');
       reasonSelect.innerHTML = '<option value="">-- Select Reason --</option>';
-      if (Array.isArray(reasons)) {
-        reasons.forEach(reason => {
-          const option = document.createElement('option');
-          option.value = reason;
-          option.textContent = reason;
-          reasonSelect.appendChild(option);
+      if (pnToReasons[value]) {
+        pnToReasons[value].forEach(reason => {
+          const opt = document.createElement('option');
+          opt.value = reason;
+          opt.textContent = reason;
+          reasonSelect.appendChild(opt);
         });
       }
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('removalDate').value = today;
+    // Set today's date by default
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('removalDate').valueAsDate = new Date();
     });
   </script>
 </body>
