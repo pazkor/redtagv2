@@ -168,6 +168,31 @@
     <button type="button" onclick="submitToSheet()">📤 Submit to Google Sheet</button>
   </div>
   <script>
+    const pnToReasons = {
+      'SP-MA-0969-02': ["Brake motor rotates freely", "Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
+      'SP-MA-0970-02': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Other"],
+      'SP-MA-0874-03': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
+      'SP-MA-0873-03': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
+      'MA-0873-04': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"],
+      'MA-0874-04': ["Ticking noises", "Motor test Failures; current/toque out of spec.", "Damaged Cable/connector", "Resolver cable interrupted", "Autophase Failure", "Other"]
+    };
+
+    document.getElementById('partNumber').addEventListener('input', function () {
+      const pn = this.value.trim();
+      const reasons = pnToReasons[pn];
+      const reasonSelect = document.getElementById('reason');
+
+      reasonSelect.innerHTML = '<option value="">-- Select Reason --</option>';
+      if (Array.isArray(reasons)) {
+        reasons.forEach(reason => {
+          const option = document.createElement('option');
+          option.value = reason;
+          option.textContent = reason;
+          reasonSelect.appendChild(option);
+        });
+      }
+    });
+
     function submitToSheet() {
       const data = {
         partNumber: document.getElementById('partNumber')?.value || '',
@@ -183,7 +208,7 @@
 
       fetch('https://script.google.com/macros/s/AKfycbygY5Bj9DVg1TSiT6rzZ7BRv292d2OnKEq7Ypk9o4q_Jg542RN2ZMPCY37ICljBBmD-9Q/exec', {
         method: 'POST',
-        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
       .then(() => {
