@@ -305,10 +305,10 @@
       };
 
       fetch('https://script.google.com/macros/s/AKfycbygY5Bj9DVg1TSiT6rzZ7BRv292d2OnKEq7Ypk9o4q_Jg542RN2ZMPCY37ICljBBmD-9Q/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+  method: 'POST',
+  mode: 'cors', // היה no-cors
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(data))
       }).then(() => {
         alert("✅ Data submitted to Google Sheet");
       }).catch(error => {
