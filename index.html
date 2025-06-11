@@ -173,6 +173,7 @@
   <div style="margin-top: 30px; text-align: center;">
     <button type="button" onclick="window.print()">🖨️ Print</button>
     <button type="button" id="savePdfBtn">📄 Save as PDF</button>
+    <button type="button" onclick="submitToSheet()">📤 Submit to Google Sheet</button>
   </div>
   <script>
     const pnToReasons = {
@@ -289,6 +290,32 @@
         });
       });
     });
+
+    function submitToSheet() {
+      const data = {
+        partNumber: document.getElementById('partNumber').value,
+        motorPosition: document.getElementById('motorPosition').value,
+        reason: document.getElementById('reason').value,
+        removalDate: document.getElementById('removalDate').value,
+        removedFrom: document.getElementById('removedFrom').value,
+        taggedBy: document.getElementById('taggedBy').value,
+        mfc: document.getElementById('mfc').value,
+        serviceCallId: document.getElementById('serviceCallId').value,
+        comments: document.getElementById('comments').value
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbygY5Bj9DVg1TSiT6rzZ7BRv292d2OnKEq7Ypk9o4q_Jg542RN2ZMPCY37ICljBBmD-9Q/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(() => {
+        alert("✅ Data submitted to Google Sheet");
+      }).catch(error => {
+        alert("❌ Error submitting data");
+        console.error(error);
+      });
+    }
   </script>
 </body>
 </html>
