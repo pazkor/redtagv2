@@ -99,7 +99,7 @@
       <img src="lgo.png">
       <h1>RED TAG Form</h1>
     </header>
-    <form id="formContainer">
+    <form id="formContainer" action="https://script.google.com/macros/s/AKfycbygY5Bj9DVg1TSiT6rzZ7BRv292d2OnKEq7Ypk9o4q_Jg542RN2ZMPCY37ICljBBmD-9Q/exec" method="POST" target="_blank">
       <div class="form-group">
         <label for="partNumber">Part Number</label>
         <input type="text" id="partNumber" name="partNumber" list="partNumbers">
@@ -160,12 +160,11 @@
         <label for="comments">Comments</label>
         <textarea id="comments" name="comments"></textarea>
       </div>
+      <div style="margin-top: 30px; text-align: center;">
+        <button type="button" onclick="window.print()">🖨️ Print</button>
+        <button type="submit">📤 Submit to Google Sheet</button>
+      </div>
     </form>
-  </div>
-  <div style="margin-top: 30px; text-align: center;">
-    <button type="button" onclick="window.print()">🖨️ Print</button>
-    <button type="button" id="savePdfBtn">📄 Save as PDF</button>
-    <button type="button" onclick="submitToSheet()">📤 Submit to Google Sheet</button>
   </div>
   <script>
     const pnToReasons = {
@@ -192,34 +191,10 @@
       }
     });
 
-    function submitToSheet() {
-      const data = {
-        partNumber: document.getElementById('partNumber')?.value || '',
-        motorPosition: document.getElementById('motorPosition')?.value || '',
-        reason: document.getElementById('reason')?.value || '',
-        removalDate: document.getElementById('removalDate')?.value || '',
-        removedFrom: document.getElementById('removedFrom')?.value || '',
-        taggedBy: document.getElementById('taggedBy')?.value || '',
-        mfc: document.getElementById('mfc')?.value || '',
-        serviceCallId: document.getElementById('serviceCallId')?.value || '',
-        comments: document.getElementById('comments')?.value || ''
-      };
-
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://script.google.com/macros/s/AKfycbyScfATdPmtUmhY4Ee3d5J-XAxYtYtltm2K-d4Rdq4L394TsVbzPPWFOsnP65AUD8D5Tw/exec';
-      form.target = '_blank';
-      for (const key in data) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = data[key];
-        form.appendChild(input);
-      }
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('removalDate').value = today;
+    });
   </script>
 </body>
 </html>
