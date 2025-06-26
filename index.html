@@ -60,6 +60,7 @@
   <div id="exportWrapper">
     <h1>RED TAG Form</h1>
     <form id="formContainer" action="https://script.google.com/macros/s/AKfycby6TugvKX7c5ml8Yq_qPi8ureyCUfuynYXbwA8xZVOO63mNhUIRQZx5GBQ8bL-8MGE08A/exec" method="POST" target="_blank">
+      
       <div class="form-group">
         <label for="partNumber">Part Number</label>
         <input type="text" name="partNumber" id="partNumber" list="partNumbers" required>
@@ -77,14 +78,6 @@
         <label for="motorPosition">Motor Position</label>
         <select name="motorPosition" id="motorPosition">
           <option value="">-- Select Motor Position --</option>
-          <option value="M1">M1</option>
-          <option value="M2">M2</option>
-          <option value="M3">M3</option>
-          <option value="M4">M4</option>
-          <option value="M5">M5</option>
-          <option value="M6">M6</option>
-          <option value="M7">M7</option>
-          <option value="M8">M8</option>
         </select>
       </div>
 
@@ -147,10 +140,40 @@
       "MA-0874-04": ["Ticking noises", "Motor test Failures", "Cable damage", "Other"]
     };
 
+    const group1PNs = ["SP-MA-0969-02", "SP-MA-0874-03", "MA-0874-04"];
+    const group2PNs = ["SP-MA-0970-02", "SP-MA-0873-03", "MA-0873-04"];
+    const motorPositionSelect = document.getElementById('motorPosition');
+
+    const motorPositions = {
+      Group1: ["M1", "M4", "M5", "M6", "M7"],
+      Group2: ["M2", "M3", "M8"]
+    };
+
+    function updateMotorPositions(pn) {
+      motorPositionSelect.innerHTML = '<option value="">-- Select Motor Position --</option>';
+      let group = null;
+
+      if (group1PNs.includes(pn)) {
+        group = "Group1";
+      } else if (group2PNs.includes(pn)) {
+        group = "Group2";
+      }
+
+      if (group) {
+        motorPositions[group].forEach(pos => {
+          const opt = document.createElement('option');
+          opt.value = pos;
+          opt.textContent = pos;
+          motorPositionSelect.appendChild(opt);
+        });
+      }
+    }
+
     document.getElementById('partNumber').addEventListener('input', function () {
       const value = this.value;
       const reasonSelect = document.getElementById('reason');
       reasonSelect.innerHTML = '<option value="">-- Select Reason --</option>';
+      
       if (pnToReasons[value]) {
         pnToReasons[value].forEach(reason => {
           const opt = document.createElement('option');
@@ -159,14 +182,14 @@
           reasonSelect.appendChild(opt);
         });
       }
+
+      updateMotorPositions(value);
     });
 
-    // default removal date
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('removalDate').valueAsDate = new Date();
     });
 
-    // save to pdf
     document.getElementById('savePdfBtn').addEventListener('click', () => {
       const wrapper = document.getElementById('exportWrapper');
       html2canvas(wrapper, { scale: 2 }).then(canvas => {
