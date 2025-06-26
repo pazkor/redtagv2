@@ -142,52 +142,70 @@
 
     const group1PNs = ["SP-MA-0969-02", "SP-MA-0874-03", "MA-0874-04"];
     const group2PNs = ["SP-MA-0970-02", "SP-MA-0873-03", "MA-0873-04"];
-    const motorPositionSelect = document.getElementById('motorPosition');
 
-    const motorPositions = {
-      Group1: ["M1", "M4", "M5", "M6", "M7"],
-      Group2: ["M2", "M3", "M8"]
+    const motorToGroup = {
+      "M1": "Group1",
+      "M2": "Group2",
+      "M3": "Group2",
+      "M4": "Group1",
+      "M5": "Group2",
+      "M6": "Group1",
+      "M7": "Group1",
+      "M8": "Group2"
     };
 
-    function updateMotorPositions(pn) {
-      motorPositionSelect.innerHTML = '<option value="">-- Select Motor Position --</option>';
-      let group = null;
+    const partNumberInput = document.getElementById('partNumber');
+    const motorSelect = document.getElementById('motorPosition');
+    const reasonSelect = document.getElementById('reason');
+    const form = document.getElementById('formContainer');
 
-      if (group1PNs.includes(pn)) {
-        group = "Group1";
-      } else if (group2PNs.includes(pn)) {
-        group = "Group2";
-      }
-
-      if (group) {
-        motorPositions[group].forEach(pos => {
-          const opt = document.createElement('option');
-          opt.value = pos;
-          opt.textContent = pos;
-          motorPositionSelect.appendChild(opt);
-        });
-      }
-    }
-
-    document.getElementById('partNumber').addEventListener('input', function () {
-      const value = this.value;
-      const reasonSelect = document.getElementById('reason');
+    function updateReasons(pn) {
       reasonSelect.innerHTML = '<option value="">-- Select Reason --</option>';
-      
-      if (pnToReasons[value]) {
-        pnToReasons[value].forEach(reason => {
+      if (pnToReasons[pn]) {
+        pnToReasons[pn].forEach(reason => {
           const opt = document.createElement('option');
           opt.value = reason;
           opt.textContent = reason;
           reasonSelect.appendChild(opt);
         });
       }
+    }
 
-      updateMotorPositions(value);
+    function updateMotorOptions(pn) {
+      motorSelect.innerHTML = '<option value="">-- Select Motor Position --</option>';
+      let allowedGroup = group1PNs.includes(pn) ? "Group1" : group2PNs.includes(pn) ? "Group2" : null;
+
+      for (const [motor, group] of Object.entries(motorToGroup)) {
+        if (group === allowedGroup) {
+          const opt = document.createElement('option');
+          opt.value = motor;
+          opt.textContent = motor;
+          motorSelect.appendChild(opt);
+        }
+      }
+    }
+
+    partNumberInput.addEventListener('input', function () {
+      const pn = this.value;
+      updateReasons(pn);
+      updateMotorOptions(pn);
     });
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('removalDate').valueAsDate = new Date();
+    });
+
+    form.addEventListener('submit', function (e) {
+      const pn = partNumberInput.value;
+      const motor = motorSelect.value;
+
+      const requiredGroup = group1PNs.includes(pn) ? "Group1" : group2PNs.includes(pn) ? "Group2" : null;
+      const selectedGroup = motorToGroup[motor];
+
+      if (!requiredGroup || selectedGroup !== requiredGroup) {
+        e.preventDefault();
+        alert(`Motor ${motor} is not allowed for part number ${pn}. Please select a valid motor.`);
+      }
     });
 
     document.getElementById('savePdfBtn').addEventListener('click', () => {
